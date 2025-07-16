@@ -56,6 +56,14 @@ def get_cpu_temperature():
     return "-"
 
 
+def get_swap_usage():
+    swap = psutil.swap_memory()
+    if swap.total == 0:
+        return "-"
+
+    return swap.percent
+
+
 def make_bar(percent: float, size: int = 8) -> str:
     """Returns a visual progress bar string, like [██████░░░░░░]"""
     filled_length = int(size * percent / 100)

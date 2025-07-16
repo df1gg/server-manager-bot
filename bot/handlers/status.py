@@ -26,19 +26,23 @@ def generate_server_status_message() -> str:
     cpu = system.get_cpu()
     temp = system.get_cpu_temperature()
     ram = system.get_ram()
+    swap = system.get_swap_usage()
     disk = system.get_disk()
 
     cpu_bar = system.make_bar(cpu)
     ram_bar = system.make_bar(ram)
+    swap_bar = system.make_bar(swap)
     disk_bar = system.make_bar(disk)
 
     return text.SERVER_STATUS.format(
         cpu=cpu,
         temp=temp,
         ram=ram,
+        swap=swap,
         disk=disk,
         cpu_bar=cpu_bar,
         ram_bar=ram_bar,
+        swap_bar=swap_bar,
         disk_bar=disk_bar,
         local_ip=system.get_local_ip(),
         ip=system.get_ip(),
