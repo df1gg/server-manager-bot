@@ -2,7 +2,6 @@ from aiogram import Router, types
 from aiogram.filters import CommandStart
 from bot import text
 from bot.keyboards.main_menu import main_menu_kb
-from utils.logger import logger
 import config
 from utils.logging_decorator import log_request
 

@@ -1,6 +1,5 @@
 from aiogram import F, Router, types
 from utils import system
-from utils.logger import logger
 from utils.logging_decorator import log_request
 from utils.safe_edit import safe_edit
 from bot import text
