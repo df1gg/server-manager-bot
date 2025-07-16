@@ -21,7 +21,10 @@ SERVER_STATUS = """
 
 [Network]
 ├ 🏠 Local IP:  {local_ip}
-└ 🌐 Public IP:  {ip}
+├ 🌐 Public IP:  {ip}
+├ ⬇️ Download:   {download}
+├ ⬆️ Upload:     {upload}
+└ 📦 Packets:    {packets_in} in / {packets_out} out
 
 [Uptime]
 ├ 📡 Uptime:  {uptime}

@@ -30,6 +30,7 @@ def generate_server_status_message() -> str:
     disk = system.get_disk()
     top_cpu = system.get_top_process("cpu")
     top_ram = system.get_top_process("ram")
+    network = system.get_network_traffic()
 
     cpu_bar = system.make_bar(cpu)
     ram_bar = system.make_bar(ram)
@@ -50,6 +51,10 @@ def generate_server_status_message() -> str:
         disk_bar=disk_bar,
         local_ip=system.get_local_ip(),
         ip=system.get_ip(),
+        download=network["download"],
+        upload=network["upload"],
+        packets_in=network["packets_in"],
+        packets_out=network["packets_out"],
         uptime=system.get_uptime(),
         time=system.get_time_now(),
     )

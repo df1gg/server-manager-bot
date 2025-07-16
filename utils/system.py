@@ -1,6 +1,7 @@
 import psutil
 import socket
 from datetime import datetime
+from utils.format import format_bytes
 
 
 def get_cpu():
@@ -81,6 +82,17 @@ def get_top_process(by: str = "cpu"):
 
     name, usage = processes[0]
     return f"{name} ({usage:.1f}%)"
+
+
+def get_network_traffic():
+    io = psutil.net_io_counters()
+
+    return {
+        "download": format_bytes(io.bytes_recv),
+        "upload": format_bytes(io.bytes_sent),
+        "packets_in": f"{io.packets_recv:,}",
+        "packets_out": f"{io.packets_sent:,}",
+    }
 
 
 def make_bar(percent: float, size: int = 8) -> str:
