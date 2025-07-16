@@ -15,6 +15,10 @@ SERVER_STATUS = """
 ├ 🔃 Swap:  {swap}% {swap_bar}
 └ 💾 Disk:  {disk}% {disk_bar}
 
+[Processes]
+├ 🧠 Top CPU:  {top_cpu}
+└ 🧬 Top RAM:  {top_ram}
+
 [Network]
 ├ 🏠 Local IP:  {local_ip}
 └ 🌐 Public IP:  {ip}

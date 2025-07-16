@@ -28,6 +28,8 @@ def generate_server_status_message() -> str:
     ram = system.get_ram()
     swap = system.get_swap_usage()
     disk = system.get_disk()
+    top_cpu = system.get_top_process("cpu")
+    top_ram = system.get_top_process("ram")
 
     cpu_bar = system.make_bar(cpu)
     ram_bar = system.make_bar(ram)
@@ -40,6 +42,8 @@ def generate_server_status_message() -> str:
         ram=ram,
         swap=swap,
         disk=disk,
+        top_cpu=top_cpu,
+        top_ram=top_ram,
         cpu_bar=cpu_bar,
         ram_bar=ram_bar,
         swap_bar=swap_bar,

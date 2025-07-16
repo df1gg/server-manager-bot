@@ -64,6 +64,25 @@ def get_swap_usage():
     return swap.percent
 
 
+def get_top_process(by: str = "cpu"):
+    key = "cpu_percent" if by == "cpu" else "memory_percent"
+
+    processes = []
+    for proc in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]):
+        try:
+            processes.append((proc.info["name"], proc.info[key]))
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    processes.sort(key=lambda x: x[1], reverse=True)
+
+    if not processes or processes[0][1] == 0.0:
+        return "-"
+
+    name, usage = processes[0]
+    return f"{name} ({usage:.1f}%)"
+
+
 def make_bar(percent: float, size: int = 8) -> str:
     """Returns a visual progress bar string, like [██████░░░░░░]"""
     filled_length = int(size * percent / 100)
