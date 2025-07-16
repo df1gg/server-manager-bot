@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from bot import setup_routers
+from utils.logger import logger
 
 
 async def main():
@@ -13,8 +14,10 @@ async def main():
     dp = Dispatcher()
     setup_routers(dp)
 
+    logger.info("Bot sucess started")
     await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
+    logger.info("Bot starting...")
     asyncio.run(main())
