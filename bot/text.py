@@ -1,4 +1,4 @@
-START_TEXT = """🛡️ <b>Welcome to Server Manager Bot!</b>
+START = """🛡️ <b>Welcome to Server Manager Bot!</b>
 
 You can use this bot to monitor and control your Linux server.
 """

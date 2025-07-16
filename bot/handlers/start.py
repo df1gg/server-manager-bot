@@ -12,4 +12,4 @@ router = Router()
 async def start_command_handler(message: types.Message):
     if message.from_user.id != int(config.OWNER_ID):
         return await message.answer(text.ACCESS_DENIED)
-    await message.answer(text.START_TEXT, reply_markup=main_menu_kb())
+    await message.answer(text.START, reply_markup=main_menu_kb())
