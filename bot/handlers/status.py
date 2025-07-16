@@ -10,28 +10,7 @@ router = Router()
 
 @router.message(F.text == "📡 Status")
 async def get_server_status_handler(message: types.Message):
-    cpu = system.get_cpu()
-    temp = system.get_cpu_temperature()
-    ram = system.get_ram()
-    disk = system.get_disk()
-
-    cpu_bar = system.make_bar(cpu)
-    ram_bar = system.make_bar(ram)
-    disk_bar = system.make_bar(disk)
-
-    status_message = text.SERVER_STATUS.format(
-        cpu=cpu,
-        temp=temp,
-        ram=ram,
-        disk=disk,
-        cpu_bar=cpu_bar,
-        ram_bar=ram_bar,
-        disk_bar=disk_bar,
-        local_ip=system.get_local_ip(),
-        ip=system.get_ip(),
-        uptime=system.get_uptime(),
-        time=system.get_time_now(),
-    )
+    status_message = generate_server_status_message()
     await message.answer(status_message, reply_markup=server_status_kb())
 
 
@@ -39,6 +18,11 @@ async def get_server_status_handler(message: types.Message):
 async def refresh_server_status_handler(callback: types.CallbackQuery):
     await callback.answer()
 
+    status_message = generate_server_status_message()
+    await safe_edit(callback.message, status_message, markup=server_status_kb())
+
+
+def generate_server_status_message() -> str:
     cpu = system.get_cpu()
     temp = system.get_cpu_temperature()
     ram = system.get_ram()
@@ -48,7 +32,7 @@ async def refresh_server_status_handler(callback: types.CallbackQuery):
     ram_bar = system.make_bar(ram)
     disk_bar = system.make_bar(disk)
 
-    status_message = text.SERVER_STATUS.format(
+    return text.SERVER_STATUS.format(
         cpu=cpu,
         temp=temp,
         ram=ram,
@@ -61,4 +45,3 @@ async def refresh_server_status_handler(callback: types.CallbackQuery):
         uptime=system.get_uptime(),
         time=system.get_time_now(),
     )
-    await safe_edit(callback.message, status_message, markup=server_status_kb())
