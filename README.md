@@ -13,23 +13,27 @@
 ## 🧾 Description
 
 **Telegram Server Manager Bot** is a lightweight self-hosted bot that lets you:
-- Check server status (uptime, RAM, CPU, disk, IP)
-- Manage systemd services
-- View logs
-- Upload/download files
+
+- Monitor server metrics (uptime, CPU, RAM, disk, swap, temperature, and more)
+- Manage systemd services (start/stop/restart)
+- View and tail logs from services or files
+- Upload/download files directly through Telegram
+- Inspect network: local/public IP, bandwidth usage, listening ports
+- Identify top processes by CPU/RAM
+- Whitelisted admin-only access
 
 Ideal for hobbyists, sysadmins, and minimal Linux lovers who don’t want to deal with full dashboards like Cockpit or Netdata.
 
 ---
 
-## 🧐 Features (planned)
+## 🧐 Features
 
-- uptime, CPU, RAM, disk, IP
-- start/stop/restart systemd services
-- tail logs from systemd or files
-- File upload & download through Telegram
-- Whitelisted access via Telegram ID
-- Environment-based config via `.env`
+- **System Metrics**: uptime, CPU, RAM, disk, swap, CPU temperature, load average
+- **Network Info**: local/public IP, downloaded/uploaded bytes (human-readable), packet counts
+- **Processes**: top CPU and RAM consumers
+- **Hostname**: server identifier in status header
+- **Security**: access limited by Telegram ID(s) & access logs
+- **Extensible**: modular utilities, middleware, and decorators for easy expansion
 
 ---
 
@@ -58,7 +62,7 @@ pip install -r requirements.txt
 
 ```env
 BOT_TOKEN=your_telegram_bot_token
-OWNER_ID=your_telegram_numeric_id
+OWNER_IDS=123456789,987654321   # comma-separated list of admin IDs or one ID
 ```
 
 5. **Run the bot**
@@ -71,13 +75,12 @@ python main.py
 
 ## 🍰 Contribution
 
-Contributions are welcome!  
-To contribute:
+Contributions are welcome! To contribute:
 
-1. Fork the repository  
-2. Create a feature branch  
-3. Commit your changes  
-4. Open a pull request  
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m "feat: your feature description"`)
+4. Push and open a Pull Request against `dev`
 
 Please keep the code clean and follow the project style.
 
@@ -87,9 +90,48 @@ Please keep the code clean and follow the project style.
 
 - **Python 3.11+**
 - [Aiogram 3.x](https://github.com/aiogram/aiogram) — Telegram Bot Framework (async)
-- `asyncio`, `subprocess`, `os`, `psutil` — Core system tools
+- `asyncio`, `socket`, `os`, `psutil` — Core system tools
+- `loguru` — structured and colorized logging
 - `systemd` — Background service handling
-- `.env` — Secure environment-based config
+- `dotenv` — Secure environment-based config
+
+---
+
+## 🔐 Security & Access Control
+
+- Only IDs in `OWNER_IDS` can interact with the bot
+- Unauthorized users receive a `⛔ Access denied` message and no handlers run
+- Flexible middleware and decorator support for further restrictions or authentication
+
+---
+
+## 📌 TODO
+
+### 🟢 MVP / Must-have
+
+- [x] Display server status info with inline refresh button
+- [x] Admin-only access control by Telegram ID(s)
+- [ ] Service management
+  - Automatic discovery of available systemd services
+  - Add/remove services from management list
+- [ ] OS version display (distribution and kernel)
+- [ ] Auto-refresh status periodically
+- [ ] Reboot & Poweroff functionality
+
+### 🔵 Nice-to-have (v1)
+
+- [ ] Docker integration: list containers, start/stop/restart via buttons
+- [ ] Graphs: CPU/RAM/Disk/Swap usage over the last hours
+- [ ] Alerts & Notifications: send Telegram alerts on high load or service failure
+- [ ] Port scanner: list listening TCP ports with process names
+- [ ] Cron-manager: add/remove cron jobs via bot commands
+- [ ] Log search: grep-like filtering of logs
+
+### ⚫️ Future / Extras
+
+- [ ] Internationalization (i18n) — multi-language support
+- [ ] CI/CD trigger — deploy or tests via bot
+- [ ] Batch commands execution — run multiple commands in sequence
 
 ---
 
@@ -103,15 +145,3 @@ Feel free to use, modify, and share.
 ## 👤 Author
 
 Made by [df1gg](https://github.com/df1gg) with ❤️
-
----
-
-## 📌 TODO
-
-- [ ] Implement `status` button  
-- [ ] Add `services` management  
-- [ ] Tail log files 
-- [ ] File transfer (upload & download)  
-- [ ] Systemd service for auto-run  
-- [ ] Security: 2FA or password command  
-- [ ] Docker integration  
