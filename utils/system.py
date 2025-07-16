@@ -42,3 +42,10 @@ def get_uptime():
 
 def get_time_now():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def make_bar(percent: float, size: int = 8) -> str:
+    """Returns a visual progress bar string, like [██████░░░░░░]"""
+    filled_length = int(size * percent / 100)
+    bar = "█" * filled_length + "░" * (size - filled_length)
+    return f"[{bar}]"

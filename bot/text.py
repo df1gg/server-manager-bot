@@ -6,13 +6,18 @@ You can use this bot to monitor and control your Linux server.
 ACCESS_DENIED = "🚫 <b>Access denied.</b> You are not allowed to use this bot."
 
 SERVER_STATUS = """
-<b>📊 Server Stats</b>
+<b>📊 Server Status</b>
 
-├ 🧠 <b>CPU:</b>      {cpu}%
-├ 📈 <b>RAM:</b>      {ram}%
-├ 💾 <b>Disk:</b>     {disk}%
-├ 🏠 <b>Local IP:</b> {local_ip}
-├ 🌐 <b>IP:</b>       {ip}
-├ 📡 <b>Uptime:</b>   {uptime}
-└ 🕒 <b>Time:</b>     {time}
+[System]
+├ 🧠 CPU:   {cpu}%  {cpu_bar}
+├ 📈 RAM:   {ram}%  {ram_bar}
+└ 💾 Disk:  {disk}% {disk_bar}
+
+[Network]
+├ 🏠 Local IP:  {local_ip}
+└ 🌐 Public IP: {ip}
+
+[Uptime]
+├ 📡 Uptime:    {uptime}
+└ 🕒 Time:      {time}
 """
