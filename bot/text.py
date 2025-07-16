@@ -11,6 +11,7 @@ SERVER_STATUS = """
 ├ 🧠 <b>CPU:</b>      {cpu}%
 ├ 📈 <b>RAM:</b>      {ram}%
 ├ 💾 <b>Disk:</b>     {disk}%
+├ 🏠 <b>Local IP:</b> {local_ip}
 ├ 🌐 <b>IP:</b>       {ip}
 ├ 📡 <b>Uptime:</b>   {uptime}
 └ 🕒 <b>Time:</b>     {time}
