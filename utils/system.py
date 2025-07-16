@@ -4,6 +4,10 @@ from datetime import datetime
 from utils.format import format_bytes
 
 
+def get_hostname():
+    return socket.gethostname()
+
+
 def get_cpu():
     return psutil.cpu_percent()
 

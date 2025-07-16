@@ -6,7 +6,7 @@ You can use this bot to monitor and control your Linux server.
 ACCESS_DENIED = "🚫 <b>Access denied.</b> You are not allowed to use this bot."
 
 SERVER_STATUS = """
-<b>📊 Server Status</b>
+<b>📊 Server Status</b>  <code>[{hostname}]</code>
 
 [System]
 ├ 🧠 CPU:  {cpu}% {cpu_bar}
