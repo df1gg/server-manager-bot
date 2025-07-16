@@ -44,6 +44,18 @@ def get_time_now():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
+def get_cpu_temperature():
+    temps = psutil.sensors_temperatures()
+    if not temps:
+        return "-"
+
+    for name, entries in temps.items():
+        if entries:
+            return f"{entries[0].current:.1f}°C"
+
+    return "-"
+
+
 def make_bar(percent: float, size: int = 8) -> str:
     """Returns a visual progress bar string, like [██████░░░░░░]"""
     filled_length = int(size * percent / 100)

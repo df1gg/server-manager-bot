@@ -11,6 +11,7 @@ router = Router()
 @router.message(F.text == "📡 Status")
 async def get_server_status_handler(message: types.Message):
     cpu = system.get_cpu()
+    temp = system.get_cpu_temperature()
     ram = system.get_ram()
     disk = system.get_disk()
 
@@ -20,6 +21,7 @@ async def get_server_status_handler(message: types.Message):
 
     status_message = text.SERVER_STATUS.format(
         cpu=cpu,
+        temp=temp,
         ram=ram,
         disk=disk,
         cpu_bar=cpu_bar,
@@ -38,6 +40,7 @@ async def refresh_server_status_handler(callback: types.CallbackQuery):
     await callback.answer()
 
     cpu = system.get_cpu()
+    temp = system.get_cpu_temperature()
     ram = system.get_ram()
     disk = system.get_disk()
 
@@ -47,6 +50,7 @@ async def refresh_server_status_handler(callback: types.CallbackQuery):
 
     status_message = text.SERVER_STATUS.format(
         cpu=cpu,
+        temp=temp,
         ram=ram,
         disk=disk,
         cpu_bar=cpu_bar,

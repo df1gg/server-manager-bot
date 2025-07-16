@@ -10,6 +10,7 @@ SERVER_STATUS = """
 
 [System]
 ├ 🧠 CPU:  {cpu}% {cpu_bar}
+├ 🌡️ CPU Temp:  {temp}
 ├ 📈 RAM:  {ram}% {ram_bar}
 └ 💾 Disk:  {disk}% {disk_bar}
 
