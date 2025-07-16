@@ -9,15 +9,15 @@ SERVER_STATUS = """
 <b>📊 Server Status</b>
 
 [System]
-├ 🧠 CPU:   {cpu}%  {cpu_bar}
-├ 📈 RAM:   {ram}%  {ram_bar}
+├ 🧠 CPU:  {cpu}% {cpu_bar}
+├ 📈 RAM:  {ram}% {ram_bar}
 └ 💾 Disk:  {disk}% {disk_bar}
 
 [Network]
 ├ 🏠 Local IP:  {local_ip}
-└ 🌐 Public IP: {ip}
+└ 🌐 Public IP:  {ip}
 
 [Uptime]
-├ 📡 Uptime:    {uptime}
-└ 🕒 Time:      {time}
+├ 📡 Uptime:  {uptime}
+└ 🕒 Time:  {time}
 """
