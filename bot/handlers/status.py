@@ -1,6 +1,7 @@
 from aiogram import F, Router, types
 from utils import system
 from utils.logger import logger
+from utils.logging_decorator import log_request
 from utils.safe_edit import safe_edit
 from bot import text
 from bot.keyboards.server_status import server_status_kb
@@ -10,15 +11,15 @@ router = Router()
 
 
 @router.message(F.text == "📡 Status")
+@log_request
 async def get_server_status_handler(message: types.Message):
-    logger.info(f"Status requested by {message.from_user.id}")
     status_message = generate_server_status_message()
     await message.answer(status_message, reply_markup=server_status_kb())
 
 
 @router.callback_query(F.data == "refresh_server_status")
+@log_request
 async def refresh_server_status_handler(callback: types.CallbackQuery):
-    logger.info(f"Status requested by {callback.from_user.id}")
     await callback.answer()
 
     status_message = generate_server_status_message()
