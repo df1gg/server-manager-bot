@@ -51,8 +51,8 @@ SERVICE_INFO = """
 
 [Stats]
 ├ 🧠 CPU Usage:  {cpu}%
-├ 💾 Memory:     {mem}%
-└ 🕒 Uptime:      {uptime}
+├ 💾 Memory:  {mem}%
+└ 🕒 Uptime:  {uptime}
 
 [Path]
 └ 📍 {path}
