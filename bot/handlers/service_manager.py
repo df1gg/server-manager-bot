@@ -29,6 +29,7 @@ async def show_services_menu(message: types.Message):
 
 
 @router.callback_query(F.data.startswith("service:"))
+@router.callback_query(F.data.startswith("refresh_service:"))
 @log_request
 async def service_info_handler(callback: types.CallbackQuery):
     await callback.answer()
