@@ -1,8 +1,10 @@
 from aiogram import F, Router, types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from bot import text
+from aiogram.fsm.context import FSMContext
+from bot.states.service_manager import AddService
 from utils.logging_decorator import log_request
-from db.services_methods import get_all_services
+from db.services_methods import get_all_services, add_service
+from bot import text
 
 router = Router()
 
@@ -19,3 +21,34 @@ async def show_services_menu(message: types.Message):
     builder.adjust(1)
 
     await message.answer(text.SERVICES_MANAGER_LIST, reply_markup=builder.as_markup())
+
+
+@router.callback_query(F.data == "add_service")
+@log_request
+async def start_add_service_handler(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.delete()
+
+    await callback.message.answer("📇 Enter systemd service name:")
+    await state.set_state(AddService.waiting_for_service_name)
+
+
+@router.message(AddService.waiting_for_service_name)
+@log_request
+async def get_service_name_handler(message: types.Message, state: FSMContext):
+    await state.update_data(service_name=message.text)
+    await message.answer("🖼️ Enter a display name for the service:")
+    await state.set_state(AddService.waiting_for_display_name)
+
+
+@router.message(AddService.waiting_for_display_name)
+@log_request
+async def get_service_display_name_handler(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    service_name = data["service_name"]
+    service_display_name = message.text
+
+    await add_service(name=service_name, display_name=service_display_name)
+
+    await message.answer(f'✅ Service "{service_display_name}" success added!')
+    await state.clear()
