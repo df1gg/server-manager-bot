@@ -32,7 +32,7 @@ def service_control_kb(service_name: str) -> InlineKeyboardMarkup:
     )
 
 
-def confirm_delete_service_keyboard(service_name: str) -> InlineKeyboardMarkup:
+def confirm_delete_service_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
