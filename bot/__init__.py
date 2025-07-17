@@ -1,4 +1,4 @@
-from .handlers import start, status
+from .handlers import start, status, service_manager, cancel
 from .middlewares import access_control
 
 
@@ -10,3 +10,5 @@ def setup_middleware(dp):
 def setup_routers(dp):
     dp.include_router(start.router)
     dp.include_router(status.router)
+    dp.include_router(service_manager.router)
+    dp.include_router(cancel.router)

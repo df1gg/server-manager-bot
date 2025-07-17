@@ -2,3 +2,5 @@ aiogram==3.21.0
 python-dotenv==1.1.1
 psutil==7.0.0
 loguru==0.7.3
+SQLAlchemy==2.0.41
+aiosqlite==0.21.0
