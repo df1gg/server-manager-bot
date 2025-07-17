@@ -16,7 +16,7 @@ router = Router()
 
 @router.message(F.text == "🗄️ Service Manager")
 @log_request
-async def show_services_menu(message: types.Message):
+async def show_services_menu_message_handler(message: types.Message):
     services = await get_all_services()
     builder = InlineKeyboardBuilder()
 
@@ -26,6 +26,20 @@ async def show_services_menu(message: types.Message):
     builder.adjust(1)
 
     await message.answer(text.SERVICES_MANAGER_LIST, reply_markup=builder.as_markup())
+
+
+@router.callback_query(F.data == "back_to_service_list")
+@log_request
+async def show_services_menu_callback_hanlder(callback: types.CallbackQuery):
+    services = await get_all_services()
+    builder = InlineKeyboardBuilder()
+
+    for s in services:
+        builder.button(text=s.display_name, callback_data=f"service:{s.name}")
+    builder.button(text="➕ Add new service", callback_data="add_service")
+    builder.adjust(1)
+
+    await safe_edit(callback.message, text.SERVICES_MANAGER_LIST, builder.as_markup())
 
 
 @router.callback_query(F.data.startswith("service:"))
