@@ -44,5 +44,21 @@ def get_service_info(name: str) -> dict:
             "path": exec_path,
         }
     except Exception as e:
-        logger.error(f"{e}")
+        logger.error({e})
         return None
+
+
+def run_systemctl_command(action: str, service_name: str) -> bool:
+    """Run systemctl start|stop|restart and return success."""
+    try:
+        result = subprocess.run(
+            ["sudo", "systemctl", action, service_name],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=10,
+        )
+        return result.returncode == 0
+    except Exception as e:
+        logger.error(e)
+        return False

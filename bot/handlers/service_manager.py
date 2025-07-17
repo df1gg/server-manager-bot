@@ -13,7 +13,7 @@ from db.services_methods import (
     get_service,
 )
 from bot import text
-from utils.services import get_service_info
+from utils.services import get_service_info, run_systemctl_command
 from utils.safe_edit import safe_edit
 
 router = Router()
@@ -31,6 +31,76 @@ async def show_services_menu_message_handler(message: types.Message):
     builder.adjust(1)
 
     await message.answer(text.SERVICES_MANAGER_LIST, reply_markup=builder.as_markup())
+
+
+@router.callback_query(F.data.startswith("start_service:"))
+@log_request
+async def start_service_handler(callback: types.CallbackQuery):
+    await callback.answer()
+    service_name = callback.data.split(":", 1)[1]
+
+    info = get_service_info(service_name)
+    if not info:
+        await callback.message.answer(f"🚫 Service not found!")
+        return
+
+    success = run_systemctl_command("start", service_name)
+    if not success:
+        await callback.message.answer(
+            f"❌ Failed to start service <code>{service_name}</code>."
+        )
+        return
+
+    message_text = text.SERVICE_INFO.format(**info)
+    await safe_edit(callback.message, message_text, service_control_kb(service_name))
+
+
+@router.callback_query(F.data.startswith("restart_service:"))
+@log_request
+async def restart_service_handler(callback: types.CallbackQuery):
+    await callback.answer()
+    service_name = callback.data.split(":", 1)[1]
+
+    info = get_service_info(service_name)
+    if not info:
+        await callback.message.answer(
+            f"❌ Service <code>{service_name}</code> not found!"
+        )
+        return
+
+    success = run_systemctl_command("restart", service_name)
+    if not success:
+        await callback.message.answer(
+            f"❌ Failed to restart service <code>{service_name}</code>."
+        )
+        return
+
+    message_text = text.SERVICE_INFO.format(**info)
+    await safe_edit(callback.message, message_text, service_control_kb(service_name))
+
+
+@router.callback_query(F.data.startswith("stop_service:"))
+@log_request
+async def stop_service_handler(callback: types.CallbackQuery):
+    await callback.answer()
+    service_name = callback.data.split(":", 1)[1]
+
+    info = get_service_info(service_name)
+    if not info:
+        await callback.message.answer(
+            f"❌ Service <code>{service_name}</code> not found!"
+        )
+        return
+
+    success = run_systemctl_command("stop", service_name)
+    if not success:
+        await callback.message.answer(
+            f"❌ Failed to stop service <code>{service_name}</code>."
+        )
+        return
+
+    message_text = text.SERVICE_INFO.format(**info)
+    await safe_edit(callback.message, message_text, service_control_kb(service_name))
 
 
 @router.callback_query(F.data == "back_to_service_list")
@@ -82,7 +152,7 @@ async def delete_service_handler(callback: types.CallbackQuery, state: FSMContex
     await safe_edit(
         callback.message,
         f"❗ Are you sure you want to delete the service with name <code>{service_name}</code>?",
-        confirm_delete_service_keyboard(service_name),
+        confirm_delete_service_keyboard(),
     )
 
 
