@@ -24,6 +24,6 @@ async def get_all_services():
 
 
 async def delete_service(name: str):
-    async with async_session_maker() as service:
+    async with async_session_maker() as session:
         await session.execute(Service.__table__.delete().where(Service.name == name))
         await session.commit()

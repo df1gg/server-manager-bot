@@ -2,11 +2,16 @@ from aiogram import F, Router, types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
 from bot.keyboards.cancel import cancel_kb
-from bot.keyboards.services import service_control_kb
+from bot.keyboards.services import confirm_delete_service_keyboard, service_control_kb
 from bot.keyboards.main_menu import main_menu_kb
-from bot.states.service_manager import AddService
+from bot.states.service_manager import AddService, DeleteService
 from utils.logging_decorator import log_request
-from db.services_methods import get_all_services, add_service, get_service
+from db.services_methods import (
+    delete_service,
+    get_all_services,
+    add_service,
+    get_service,
+)
 from bot import text
 from utils.services import get_service_info
 from utils.safe_edit import safe_edit
@@ -56,6 +61,66 @@ async def service_info_handler(callback: types.CallbackQuery):
 
     message_text = text.SERVICE_INFO.format(**info)
     await safe_edit(callback.message, message_text, service_control_kb(service_name))
+
+
+@router.callback_query(F.data.startswith("delete_service:"))
+@log_request
+async def delete_service_handler(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+
+    service_name = callback.data.split(":")[1]
+
+    db_info = await get_service(service_name)
+    if not db_info:
+        await callback.message.delete()
+        await callback.message.answer("🚫 Service not found!")
+        return
+
+    await state.update_data(service_name=service_name)
+    await state.set_state(DeleteService.confirm)
+
+    await safe_edit(
+        callback.message,
+        f"❗ Are you sure you want to delete the service with name <code>{service_name}</code>?",
+        confirm_delete_service_keyboard(service_name),
+    )
+
+
+@router.callback_query(F.data == "confirm_delete_service")
+@log_request
+async def confirm_delete_service_handler(
+    callback: types.CallbackQuery, state: FSMContext
+):
+    await callback.answer()
+
+    data = await state.get_data()
+    service_name = data["service_name"]
+
+    db_info = await get_service(service_name)
+    if not db_info:
+        await callback.message.delete()
+        await callback.message.answer("🚫 Service not found!")
+        return
+
+    await delete_service(service_name)
+    await safe_edit(
+        callback.message,
+        f"✅ Service with name <code>{service_name}</code> success deleted!",
+    )
+    await state.clear()
+
+
+@router.callback_query(F.data == "cancel_delete_service")
+@log_request
+async def cancel_delete_service_handler(
+    callback: types.CallbackQuery, state: FSMContext
+):
+    await callback.answer()
+    await safe_edit(
+        callback.message,
+        f"❌ Service cancel deleted!",
+    )
+    await state.clear()
 
 
 @router.callback_query(F.data == "add_service")

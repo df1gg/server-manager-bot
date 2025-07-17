@@ -30,3 +30,16 @@ def service_control_kb(service_name: str) -> InlineKeyboardMarkup:
             ],
         ]
     )
+
+
+def confirm_delete_service_keyboard(service_name: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="✅", callback_data=f"confirm_delete_service"
+                ),
+                InlineKeyboardButton(text="❌", callback_data="cancel_delete_service"),
+            ],
+        ]
+    )
