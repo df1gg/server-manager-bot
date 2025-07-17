@@ -30,3 +30,13 @@ SERVER_STATUS = """
 ├ 📡 Uptime:  {uptime}
 └ 🕒 Time:  {time}
 """
+
+SERVICES_MANAGER_LIST = """
+🛠️ <b>Service Management</b>
+
+Here you can manage your connected services.
+Select one from the list below or add a new one.
+
+Each service allows you to configure specific parameters, enable/disable it,
+or remove it at any time.
+"""
