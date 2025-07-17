@@ -12,18 +12,27 @@ def get_service_info(name: str) -> dict:
     try:
         status = run(["systemctl", "is-active", name])
         enabled = run(["systemctl", "is-enabled", name])
-        pid = run(["pidof", name]) or "-"
+
+        show_output = run(["systemctl", "show", name])
+
+        props = dict(
+            line.split("=", 1) for line in show_output.splitlines() if "=" in line
+        )
+
+        pid = props.get("MainPID", "-")
         cpu = mem = uptime = "-"
 
-        if pid and pid != "-":
+        if pid and pid != 0 and pid != "-":
             pid = pid.split()[0]
             ps_output = run(["ps", "-p", pid, "-o", "%cpu,%mem,etime", "--no-headers"])
             if ps_output:
                 cpu, mem, uptime = ps_output.split(maxsplit=2)
 
-        exec_path = run(["systemctl", "show", name, "-p", "ExecStart"])
-        exec_path = exec_path.replace("ExecStart=", "") or "-"
-        exec_path = re.search(r"path=([^ ;]+)", exec_path).group(1)
+        exec_path = props.get("ExecStart", "-")
+        if exec_path != "-":
+            match = re.search(r"(/\S+)", exec_path)
+            if match:
+                exec_path = match.group(1)
 
         return {
             "name": name,
