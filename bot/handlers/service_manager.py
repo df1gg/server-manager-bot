@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from bot.keyboards.cancel import cancel_kb
 from bot.states.service_manager import AddService
 from utils.logging_decorator import log_request
-from db.services_methods import get_all_services, add_service
+from db.services_methods import get_all_services, add_service, get_service
 from bot import text
 from utils.services import get_service_info
 from utils.safe_edit import safe_edit
@@ -60,6 +60,13 @@ async def get_service_name_handler(message: types.Message, state: FSMContext):
     if not info:
         await message.answer(
             "🚫 Service not found! Try another name:", reply_markup=cancel_kb()
+        )
+        return
+
+    db_info = await get_service(message.text)
+    if db_info:
+        await message.answer(
+            "🚫 Service already exists! Try another name:", reply_markup=cancel_kb()
         )
         return
 

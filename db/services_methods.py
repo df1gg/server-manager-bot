@@ -9,6 +9,14 @@ async def add_service(name: str, display_name: str = None):
         await session.commit()
 
 
+async def get_service(name: str):
+    async with async_session_maker() as session:
+        result = await session.execute(
+            Service.__table__.select().where(Service.name == name)
+        )
+        return result.fetchone()
+
+
 async def get_all_services():
     async with async_session_maker() as session:
         result = await session.execute(Service.__table__.select())
