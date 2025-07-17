@@ -2,6 +2,8 @@ from aiogram import F, Router, types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
 from bot.keyboards.cancel import cancel_kb
+from bot.keyboards.services import service_control_kb
+from bot.keyboards.main_menu import main_menu_kb
 from bot.states.service_manager import AddService
 from utils.logging_decorator import log_request
 from db.services_methods import get_all_services, add_service, get_service
@@ -38,7 +40,7 @@ async def service_info_handler(callback: types.CallbackQuery):
         return
 
     message_text = text.SERVICE_INFO.format(**info)
-    await safe_edit(callback.message, message_text)
+    await safe_edit(callback.message, message_text, service_control_kb(service_name))
 
 
 @router.callback_query(F.data == "add_service")
@@ -86,5 +88,8 @@ async def get_service_display_name_handler(message: types.Message, state: FSMCon
 
     await add_service(name=service_name, display_name=service_display_name)
 
-    await message.answer(f'✅ Service "{service_display_name}" success added!')
+    await message.answer(
+        f"✅ Service <code>{service_display_name}</code> success added!",
+        reply_markup=main_menu_kb(),
+    )
     await state.clear()
