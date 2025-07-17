@@ -1,5 +1,6 @@
 import re
 import subprocess
+from utils.logger import logger
 
 
 def get_service_info(name: str) -> dict:
@@ -8,28 +9,40 @@ def get_service_info(name: str) -> dict:
             cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True
         ).stdout.strip()
 
-    status = run(["systemctl", "is-active", name])
-    enabled = run(["systemctl", "is-enabled", name])
-    pid = run(["pidof", name]) or "-"
-    cpu = mem = uptime = "-"
+    try:
+        check = subprocess.run(
+            ["systemctl", "status", name],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        if check.returncode != 0:
+            return None
 
-    if pid and pid != "-":
-        pid = pid.split()[0]
-        ps_output = run(["ps", "-p", pid, "-o", "%cpu,%mem,etime", "--no-headers"])
-        if ps_output:
-            cpu, mem, uptime = ps_output.split(maxsplit=2)
+        status = run(["systemctl", "is-active", name])
+        enabled = run(["systemctl", "is-enabled", name])
+        pid = run(["pidof", name]) or "-"
+        cpu = mem = uptime = "-"
 
-    exec_path = run(["systemctl", "show", name, "-p", "ExecStart"])
-    exec_path = exec_path.replace("ExecStart=", "") or "-"
-    exec_path = re.search(r"path=([^ ;]+)", exec_path).group(1)
+        if pid and pid != "-":
+            pid = pid.split()[0]
+            ps_output = run(["ps", "-p", pid, "-o", "%cpu,%mem,etime", "--no-headers"])
+            if ps_output:
+                cpu, mem, uptime = ps_output.split(maxsplit=2)
 
-    return {
-        "name": name,
-        "is_running": True if status == "active" else False,
-        "is_enabled": True if enabled == "enabled" else False,
-        "pid": pid,
-        "cpu": cpu,
-        "mem": mem,
-        "uptime": uptime,
-        "path": exec_path,
-    }
+        exec_path = run(["systemctl", "show", name, "-p", "ExecStart"])
+        exec_path = exec_path.replace("ExecStart=", "") or "-"
+        exec_path = re.search(r"path=([^ ;]+)", exec_path).group(1)
+
+        return {
+            "name": name,
+            "is_running": True if status == "active" else False,
+            "is_enabled": True if enabled == "enabled" else False,
+            "pid": pid,
+            "cpu": cpu,
+            "mem": mem,
+            "uptime": uptime,
+            "path": exec_path,
+        }
+    except Exception as e:
+        logger.error(f"{e}")
+        return None

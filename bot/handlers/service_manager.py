@@ -29,8 +29,14 @@ async def show_services_menu(message: types.Message):
 @router.callback_query(F.data.startswith("service:"))
 @log_request
 async def service_info_handler(callback: types.CallbackQuery):
+    await callback.answer()
+
     service_name = callback.data.split(":")[1]
     info = get_service_info(service_name)
+    if not info:
+        await callback.message.answer("🚫 Service not found!")
+        return
+
     message_text = text.SERVICE_INFO.format(**info)
     await safe_edit(callback.message, message_text)
 
@@ -50,6 +56,13 @@ async def start_add_service_handler(callback: types.CallbackQuery, state: FSMCon
 @router.message(AddService.waiting_for_service_name)
 @log_request
 async def get_service_name_handler(message: types.Message, state: FSMContext):
+    info = get_service_info(message.text)
+    if not info:
+        await message.answer(
+            "🚫 Service not found! Try another name:", reply_markup=cancel_kb()
+        )
+        return
+
     await state.update_data(service_name=message.text)
     await message.answer(
         "🖼️ Enter a display name for the service:", reply_markup=cancel_kb()
