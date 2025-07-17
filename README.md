@@ -37,6 +37,7 @@ Ideal for hobbyists, sysadmins, and minimal Linux lovers who don’t want to dea
 - **Hostname**: server identifier in status header
 - **Security**: access limited by Telegram ID(s) & access logs
 - **Extensible**: modular utilities, middleware, and decorators for easy expansion
+- **Systemd service manager**: allows you to view and manage detailed information about the service
 
 ---
 
@@ -61,18 +62,91 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. **Create `.env` file**
+4. **Create ``.env`` file**
 
 ```env
 BOT_TOKEN=your_telegram_bot_token
 OWNER_IDS=123456789,987654321   # comma-separated list of admin IDs or one ID
 ```
 
-5. **Run the bot**
+5. **(Recommend) Allow the bot to use systemctl without sudo password**
 
+If you want the bot to manage system services (start, stop, restart) via ``systemctl``, your user must be allowed to use it without entering a password.
+
+- First, find the full path to systemctl:
 ```bash
-python main.py
+which systemctl
 ```
+(Usually it's ``/bin/systemctl``)
+
+- Then open sudoers file:
+```bash
+# Option 1 — nano (easy for beginners)
+sudo EDITOR=nano visudo
+
+# Option 2 — vim
+sudo EDITOR=vim visudo
+```
+
+- Add this line at the bottom, replacing ``yourusername`` with your actual username:
+```bash
+yourusername ALL=(ALL) NOPASSWD: /bin/systemctl
+```
+(Replace ``/bin/systemctl`` with actual path if different)
+
+⚠️ Be careful: always use ``visudo`` to avoid syntax errors!
+
+6. **Run the bot as a systemd service**
+
+This allows the bot to start automatically with your system and run in the background.
+
+- Create a systemd service file:
+```bash
+# Replace "yourusername" with your actual Linux username
+sudo nano /etc/systemd/system/server-manager-bot.service
+# Or use vim: sudo nano /etc/systemd/system/server-manager-bot.service
+```
+Paste this content into the file:
+```sh
+[Unit]
+Description=Server Manager Bot
+After=network.target
+
+[Service]
+User=yourusername
+WorkingDirectory=/home/yourusername/server-manager-bot
+ExecStart=/home/yourusername/server-manager-bot/.venv/bin/python main.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+❗ **IMPORTANT:**
+Make sure to replace ``yourusername`` and the paths (``WorkingDirectory``, ``ExecStart``)
+with the correct ones for your system. Use ``pwd`` to check the full path to your project.
+Also make sure ``.venv/bin/python`` exists — or adjust to the correct Python path.
+
+- Reload systemd and enable the service:
+```bash
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable server-manager-bot
+sudo systemctl start server-manager-bot
+```
+
+- Check logs (optional):
+```bash
+journalctl -u server-manager-bot -f
+```
+
+- If you ever want to stop the bot:
+```bash
+sudo systemctl stop server-manager-bot
+```
+
+🎉 **Congratulations!**
+Your Server Manager Bot is now running as a background service and will automatically start on boot.
 
 ---
 
@@ -93,7 +167,8 @@ Please keep the code clean and follow the project style.
 
 - **Python 3.11+**
 - [Aiogram 3.x](https://github.com/aiogram/aiogram) — Telegram Bot Framework (async)
-- `asyncio`, `socket`, `os`, `psutil` — Core system tools
+- `asyncio`, `socket`, `os`, `psutil`, `subprocess` — core system tools
+- `SQLAlchemy`, `aiosqlite` — database for save options
 - `loguru` — structured and colorized logging
 - `systemd` — Background service handling
 - `dotenv` — Secure environment-based config
