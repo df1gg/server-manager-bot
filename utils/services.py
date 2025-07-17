@@ -10,14 +10,6 @@ def get_service_info(name: str) -> dict:
         ).stdout.strip()
 
     try:
-        check = subprocess.run(
-            ["systemctl", "status", name],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        if check.returncode != 0:
-            return None
-
         status = run(["systemctl", "is-active", name])
         enabled = run(["systemctl", "is-enabled", name])
         pid = run(["pidof", name]) or "-"
