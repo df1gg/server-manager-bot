@@ -6,13 +6,13 @@ def service_control_kb(service_name: str) -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="▶️ Start", callback_data=f"start:{service_name}"
+                    text="▶️ Start", callback_data=f"start_service:{service_name}"
                 ),
                 InlineKeyboardButton(
-                    text="🔃 Restart", callback_data=f"restart:{service_name}"
+                    text="🔃 Restart", callback_data=f"restart_service:{service_name}"
                 ),
                 InlineKeyboardButton(
-                    text="⏹  Stop", callback_data=f"stop:{service_name}"
+                    text="⏹  Stop", callback_data=f"stop_service:{service_name}"
                 ),
             ],
             [
@@ -20,7 +20,7 @@ def service_control_kb(service_name: str) -> InlineKeyboardMarkup:
                     text="🔄 Refresh", callback_data=f"refresh_service:{service_name}"
                 ),
                 InlineKeyboardButton(
-                    text="🗑 Delete", callback_data=f"delete:{service_name}"
+                    text="🗑 Delete", callback_data=f"delete_service:{service_name}"
                 ),
             ],
             [
