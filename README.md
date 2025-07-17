@@ -189,7 +189,7 @@ Please keep the code clean and follow the project style.
 
 - [x] Display server status info with inline refresh button
 - [x] Admin-only access control by Telegram ID(s)
-- [ ] Service management
+- [x] Service management
   - Automatic discovery of available systemd services
   - Add/remove services from management list
 - [ ] OS version display (distribution and kernel)
