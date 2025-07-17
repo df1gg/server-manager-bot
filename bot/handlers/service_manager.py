@@ -6,6 +6,8 @@ from bot.states.service_manager import AddService
 from utils.logging_decorator import log_request
 from db.services_methods import get_all_services, add_service
 from bot import text
+from utils.services import get_service_info
+from utils.safe_edit import safe_edit
 
 router = Router()
 
@@ -22,6 +24,15 @@ async def show_services_menu(message: types.Message):
     builder.adjust(1)
 
     await message.answer(text.SERVICES_MANAGER_LIST, reply_markup=builder.as_markup())
+
+
+@router.callback_query(F.data.startswith("service:"))
+@log_request
+async def service_info_handler(callback: types.CallbackQuery):
+    service_name = callback.data.split(":")[1]
+    info = get_service_info(service_name)
+    message_text = text.SERVICE_INFO.format(**info)
+    await safe_edit(callback.message, message_text)
 
 
 @router.callback_query(F.data == "add_service")

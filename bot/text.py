@@ -40,3 +40,20 @@ Select one from the list below or add a new one.
 Each service allows you to configure specific parameters, enable/disable it,
 or remove it at any time.
 """
+
+SERVICE_INFO = """
+<b>🧰 Service Info</b>  <code>[{name}]</code>
+
+[Status]
+├ 🔌 Running:  {is_running}
+├ 🔁 Auto-start:  {is_enabled}
+└ 📦 PID:  {pid}
+
+[Stats]
+├ 🧠 CPU Usage:  {cpu}%
+├ 💾 Memory:     {mem}%
+└ 🕒 Uptime:      {uptime}
+
+[Path]
+└ 📍 {path}
+"""
