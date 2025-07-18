@@ -8,6 +8,25 @@ While not production-stable yet, contributions and feedback are highly welcome!
 </p>
 
 <p align="center">
+  <a href="https://github.com/df1gg/server-manager-bot/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22">
+    <img src="https://img.shields.io/github/issues/df1gg/server-manager-bot/good%20first%20issue" alt="good first issue" />
+  </a>
+  <a href="https://github.com/df1gg/server-manager-bot/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22">
+    <img src="https://img.shields.io/github/issues-raw/df1gg/server-manager-bot/help%20wanted" alt="help wanted" />
+  </a>
+  <a href="https://github.com/df1gg/server-manager-bot/pulls">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs welcome" />
+  </a>
+  <img src="https://img.shields.io/github/contributors/df1gg/server-manager-bot" alt="contributors" />
+  <img src="https://img.shields.io/github/watchers/df1gg/server-manager-bot?style=social" alt="watchers" />
+  <img src="https://img.shields.io/github/forks/df1gg/server-manager-bot?style=social" alt="forks" />
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="python" />
+  <img src="https://img.shields.io/github/license/df1gg/server-manager-bot" alt="license" />
+</p>
+
+
+
+<p align="center">
   <b>Minimal, secure and extensible Telegram bot to monitor and control your Linux server — from anywhere.</b>
 </p>
 
