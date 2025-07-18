@@ -1,5 +1,5 @@
-> ⚠️ Project under active development — not stable yet.
-Expect breaking changes and work-in-progress code
+> 🧪 Project is under active development.
+While not production-stable yet, contributions and feedback are highly welcome!
 
 <h1 align="center" id="title">🛡️ Telegram Server Manager Bot</h1>
 
