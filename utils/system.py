@@ -5,7 +5,7 @@ from datetime import datetime
 from utils.format import format_bytes
 
 
-def get_os_info():
+def get_distro():
     if platform.system() == "Linux":
         try:
             with open("/etc/os-release") as f:
@@ -20,8 +20,11 @@ def get_os_info():
     else:
         distro = platform.system()
 
-    kernel = platform.release()
-    return f"{distro} | {kernel}"
+    return distro
+
+
+def get_kernel():
+    return platform.release()
 
 
 def get_hostname():

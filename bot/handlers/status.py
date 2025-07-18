@@ -41,7 +41,8 @@ def generate_server_status_message() -> str:
     disk_bar = system.make_bar(disk)
 
     return text.SERVER_STATUS.format(
-        os=system.get_os_info(),
+        os=system.get_distro(),
+        kernel=system.get_kernel(),
         hostname=system.get_hostname(),
         cpu=cpu,
         temp=temp,
