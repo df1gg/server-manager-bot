@@ -29,6 +29,16 @@ Ideal for hobbyists, sysadmins, and minimal Linux lovers who don’t want to dea
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/photo_1.jpg" alt="screenshot 1" height="400"/>
+  <img src="screenshots/photo_2.jpg" alt="screenshot 2" height="400"/>
+  <img src="screenshots/photo_3.jpg" alt="screenshot 3" height="400"/>
+</p>
+
+---
+
 ## 🧐 Features
 
 - **System Metrics**: uptime, CPU, RAM, disk, swap, CPU temperature, load average
@@ -192,7 +202,7 @@ Please keep the code clean and follow the project style.
 - [x] Service management
   - Automatic discovery of available systemd services
   - Add/remove services from management list
-- [ ] OS version display (distribution and kernel)
+- [x] OS version display (distribution and kernel)
 - [ ] Auto-refresh status periodically
 - [ ] Reboot & Poweroff functionality
 
