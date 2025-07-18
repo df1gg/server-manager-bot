@@ -1,7 +1,16 @@
+import platform
 import psutil
 import socket
 from datetime import datetime
 from utils.format import format_bytes
+
+
+def get_os():
+    return platform.system()
+
+
+def get_kernel():
+    return platform.release()
 
 
 def get_hostname():
