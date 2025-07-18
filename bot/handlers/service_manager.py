@@ -38,6 +38,24 @@ async def show_services_menu_message_handler(message: types.Message):
     await message.answer(text.SERVICES_MANAGER_LIST, reply_markup=builder.as_markup())
 
 
+@router.callback_query(F.data == "back_to_service_list")
+@log_request
+async def show_services_menu_callback_hanlder(callback: types.CallbackQuery):
+    services = await get_all_services()
+    builder = InlineKeyboardBuilder()
+
+    for s in services:
+        info = get_service_info(s.name)
+        status = "🟢" if info and info["is_running"] else "🔴"
+        builder.button(
+            text=f"{status} {s.display_name}", callback_data=f"service:{s.name}"
+        )
+    builder.button(text="➕ Add new service", callback_data="add_service")
+    builder.adjust(1)
+
+    await safe_edit(callback.message, text.SERVICES_MANAGER_LIST, builder.as_markup())
+
+
 @router.callback_query(F.data.startswith("start_service:"))
 @log_request
 async def start_service_handler(callback: types.CallbackQuery):
@@ -106,20 +124,6 @@ async def stop_service_handler(callback: types.CallbackQuery):
 
     message_text = text.SERVICE_INFO.format(**info)
     await safe_edit(callback.message, message_text, service_control_kb(service_name))
-
-
-@router.callback_query(F.data == "back_to_service_list")
-@log_request
-async def show_services_menu_callback_hanlder(callback: types.CallbackQuery):
-    services = await get_all_services()
-    builder = InlineKeyboardBuilder()
-
-    for s in services:
-        builder.button(text=s.display_name, callback_data=f"service:{s.name}")
-    builder.button(text="➕ Add new service", callback_data="add_service")
-    builder.adjust(1)
-
-    await safe_edit(callback.message, text.SERVICES_MANAGER_LIST, builder.as_markup())
 
 
 @router.callback_query(F.data.startswith("service:"))
