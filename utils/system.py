@@ -5,12 +5,23 @@ from datetime import datetime
 from utils.format import format_bytes
 
 
-def get_os():
-    return platform.system()
+def get_os_info():
+    if platform.system() == "Linux":
+        try:
+            with open("/etc/os-release") as f:
+                lines = f.readlines()
+                distro = ""
+                for line in lines:
+                    if line.startswith("PRETTY_NAME="):
+                        distro = line.strip().split("=")[1].strip('"')
+                        break
+        except Exception:
+            distro = "Unknown"
+    else:
+        distro = platform.system()
 
-
-def get_kernel():
-    return platform.release()
+    kernel = platform.release()
+    return f"{distro} | {kernel}"
 
 
 def get_hostname():
