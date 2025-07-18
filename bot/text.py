@@ -9,7 +9,7 @@ SERVER_STATUS = """
 <b>📊 Server Status</b>  <code>[{hostname}]</code>
 
 [System]
-├ 💻 OS:  {os} {kernel}
+├ 💻 OS:  {os}
 ├ 🧠 CPU:  {cpu}% {cpu_bar}
 ├ 🌡️ CPU Temp:  {temp}
 ├ 📈 RAM:  {ram}% {ram_bar}
