@@ -1,6 +1,7 @@
 from aiogram import F, Router, types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
+from sqlalchemy.ext import asyncio
 from bot.keyboards.cancel import cancel_kb
 from bot.keyboards.services import confirm_delete_service_keyboard, service_control_kb
 from bot.keyboards.main_menu import main_menu_kb
@@ -26,7 +27,11 @@ async def show_services_menu_message_handler(message: types.Message):
     builder = InlineKeyboardBuilder()
 
     for s in services:
-        builder.button(text=s.display_name, callback_data=f"service:{s.name}")
+        info = get_service_info(s.name)
+        status = "🟢" if info and info["is_running"] else "🔴"
+        builder.button(
+            text=f"{status} {s.display_name}", callback_data=f"service:{s.name}"
+        )
     builder.button(text="➕ Add new service", callback_data="add_service")
     builder.adjust(1)
 
