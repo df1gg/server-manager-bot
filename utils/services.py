@@ -1,6 +1,12 @@
 import re
 import subprocess
+import asyncio
+
+from aiogram import Bot
+from bot import text
+from db.services_methods import get_all_services, update_service_status
 from utils.logger import logger
+from config import MONITORING_INTERVAL, OWNER_IDS
 
 
 def get_service_info(name: str) -> dict:
@@ -63,3 +69,23 @@ def run_systemctl_command(action: str, service_name: str) -> bool:
     except Exception as e:
         logger.error(e)
         return False
+
+
+async def monitoring_services(bot: Bot):
+    while True:
+        services = await get_all_services()
+        for s in services:
+            info = await asyncio.to_thread(get_service_info, s.name)
+            if not info:
+                continue
+
+            currently_running = info["is_running"]
+            if not currently_running and s.is_running:
+                for admin in OWNER_IDS:
+                    await bot.send_message(
+                        admin,
+                        text.SERVICE_STOP_NOTIFY.format(s.display_name),
+                        parse_mode="Markdown",
+                    )
+            await update_service_status(s.name, currently_running)
+        await asyncio.sleep(MONITORING_INTERVAL)
