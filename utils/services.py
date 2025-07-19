@@ -87,4 +87,4 @@ async def monitoring_services(bot: Bot):
                         text.SERVICE_STOP_NOTIFY.format(display_name=s.display_name),
                     )
             await update_service_status(s.name, currently_running)
-        await asyncio.sleep(5)
+        await asyncio.sleep(MONITORING_INTERVAL)
