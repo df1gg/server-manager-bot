@@ -84,8 +84,7 @@ async def monitoring_services(bot: Bot):
                 for admin in OWNER_IDS:
                     await bot.send_message(
                         admin,
-                        text.SERVICE_STOP_NOTIFY.format(s.display_name),
-                        parse_mode="Markdown",
+                        text.SERVICE_STOP_NOTIFY.format(display_name=s.display_name),
                     )
             await update_service_status(s.name, currently_running)
-        await asyncio.sleep(MONITORING_INTERVAL)
+        await asyncio.sleep(5)
