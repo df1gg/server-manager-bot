@@ -3,10 +3,9 @@ import subprocess
 import asyncio
 
 from aiogram import Bot
-from bot import text
 from db.services_methods import get_all_services, update_service_status
 from utils.logger import logger
-from config import MONITORING_INTERVAL, OWNER_IDS
+from config import OWNER_IDS, SERIVICE_MONITORING_INTERVAL
 
 
 def get_service_info(name: str) -> dict:
@@ -84,7 +83,7 @@ async def monitoring_services(bot: Bot):
                 for admin in OWNER_IDS:
                     await bot.send_message(
                         admin,
-                        text.SERVICE_STOP_NOTIFY.format(display_name=s.display_name),
+                        f"🚨 Service <b>{s.display_name}</b> has stopped unexpectedly!",
                     )
             await update_service_status(s.name, currently_running)
-        await asyncio.sleep(MONITORING_INTERVAL)
+        await asyncio.sleep(SERIVICE_MONITORING_INTERVAL)

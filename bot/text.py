@@ -59,5 +59,3 @@ SERVICE_INFO = """
 [Path]
 └ 📍 {path}
 """
-
-SERVICE_STOP_NOTIFY = "🚨 Service <b>{display_name}</b> has stopped unexpectedly!"
