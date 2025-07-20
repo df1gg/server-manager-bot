@@ -66,6 +66,7 @@ Ideal for hobbyists, sysadmins, and minimal Linux lovers who don’t want to dea
 - **Extensible**: modular utilities, middleware, and decorators for easy expansion
 - **Systemd service manager**: allows you to view and manage detailed information about the service
 - **Service Down Alerts**: notifies you via Telegram if any monitored systemd service goes offline
+- **Threshold Alerts**: monitors system metrics (CPU, RAM, swap, load average, disk usage, CPU temperature) and sends Telegram alerts when user-defined thresholds are exceeded
 
 ---
 
@@ -240,7 +241,7 @@ Please keep the code clean and follow the project style.
 
 - [ ] Docker integration: list containers, start/stop/restart via buttons
 - [ ] Graphs: CPU/RAM/Disk/Swap usage over the last hours
-- [ ] Alerts & Notifications: send Telegram alerts on high load or service failure
+- [x] Alerts & Notifications: send Telegram alerts on high load or service failure
 - [ ] Port scanner: list listening TCP ports with process names
 - [ ] Cron-manager: add/remove cron jobs via bot commands
 - [ ] Log search: grep-like filtering of logs
