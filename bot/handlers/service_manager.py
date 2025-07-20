@@ -68,6 +68,7 @@ async def start_service_handler(callback: types.CallbackQuery):
         return
 
     success = run_systemctl_command("start", service_name)
+    info = get_service_info(service_name)  # update info
     if not success:
         await callback.message.answer(
             f"❌ Failed to start service <code>{service_name}</code>."
@@ -92,6 +93,7 @@ async def restart_service_handler(callback: types.CallbackQuery):
         return
 
     success = run_systemctl_command("restart", service_name)
+    info = get_service_info(service_name)  # update info
     if not success:
         await callback.message.answer(
             f"❌ Failed to restart service <code>{service_name}</code>."
@@ -116,6 +118,7 @@ async def stop_service_handler(callback: types.CallbackQuery):
         return
 
     success = run_systemctl_command("stop", service_name)
+    info = get_service_info(service_name)  # update info
     if not success:
         await callback.message.answer(
             f"❌ Failed to stop service <code>{service_name}</code>."
