@@ -1,7 +1,10 @@
+import asyncio
 import platform
+from aiogram import Bot
 import psutil
 import socket
 from datetime import datetime
+from config import ALERT_THRESHOLDS, OWNER_IDS, SYSTEM_MONITORING_INTERVAL
 from utils.format import format_bytes
 
 
@@ -127,3 +130,39 @@ def make_bar(percent: float, size: int = 8) -> str:
     filled_length = int(size * percent / 100)
     bar = "█" * filled_length + "░" * (size - filled_length)
     return f"[{bar}]"
+
+
+async def monitoring_load(bot: Bot):
+    ALERT_FLAGS = {
+        "cpu": False,
+        "ram": False,
+        "disk": False,
+        "swap": False,
+        "cpu_temp": False,
+    }
+
+    while True:
+        metrics = {
+            "cpu": get_cpu(),
+            "ram": get_ram(),
+            "disk": get_disk(),
+            "swap": get_swap_usage(),
+            "cpu_temp": float(get_cpu_temperature().replace("°C", "") or 0),
+        }
+
+        for key, value in metrics.items():
+            threshold = ALERT_THRESHOLDS.get(key)
+            exceeded = value >= threshold
+            alert_sent = ALERT_FLAGS.get(key, False)
+
+            if exceeded and not alert_sent:
+                ALERT_FLAGS[key] = True
+                text = f"🚨 <b>{key.upper()}</b> usage is high: <code>{value:.1f}%</code> (threshold: {threshold}%)"
+                for admin in OWNER_IDS:
+                    await bot.send_message(admin, text, parse_mode="HTML")
+            elif not exceeded and alert_sent:
+                ALERT_FLAGS[key] = False
+                text = f"✅ <b>{key.upper()}</b> usage back to normal: <code>{value:.1f}%</code>"
+                for admin in OWNER_IDS:
+                    await bot.send_message(admin, text, parse_mode="HTML")
+        await asyncio.sleep(SYSTEM_MONITORING_INTERVAL)

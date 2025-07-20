@@ -1,5 +1,5 @@
 > 🧪 Project is under active development.
-While not production-stable yet, contributions and feedback are highly welcome!
+> While not production-stable yet, contributions and feedback are highly welcome!
 
 <h1 align="center" id="title">🛡️ Telegram Server Manager Bot</h1>
 
@@ -23,8 +23,6 @@ While not production-stable yet, contributions and feedback are highly welcome!
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="python" />
   <img src="https://img.shields.io/github/license/df1gg/server-manager-bot" alt="license" />
 </p>
-
-
 
 <p align="center">
   <b>Minimal, secure and extensible Telegram bot to monitor and control your Linux server — from anywhere.</b>
@@ -67,6 +65,8 @@ Ideal for hobbyists, sysadmins, and minimal Linux lovers who don’t want to dea
 - **Security**: access limited by Telegram ID(s) & access logs
 - **Extensible**: modular utilities, middleware, and decorators for easy expansion
 - **Systemd service manager**: allows you to view and manage detailed information about the service
+- **Service Down Alerts**: notifies you via Telegram if any monitored systemd service goes offline
+- **Threshold Alerts**: monitors system metrics (CPU, RAM, swap, load average, disk usage, CPU temperature) and sends Telegram alerts when user-defined thresholds are exceeded
 
 ---
 
@@ -91,7 +91,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. **Create ``.env`` file**
+4. **Create `.env` file**
 
 ```env
 BOT_TOKEN=your_telegram_bot_token
@@ -100,15 +100,18 @@ OWNER_IDS=123456789,987654321   # comma-separated list of admin IDs or one ID
 
 5. **(Recommend) Allow the bot to use systemctl without sudo password**
 
-If you want the bot to manage system services (start, stop, restart) via ``systemctl``, your user must be allowed to use it without entering a password.
+If you want the bot to manage system services (start, stop, restart) via `systemctl`, your user must be allowed to use it without entering a password.
 
 - First, find the full path to systemctl:
+
 ```bash
 which systemctl
 ```
-(Usually it's ``/bin/systemctl``)
+
+(Usually it's `/bin/systemctl`)
 
 - Then open sudoers file:
+
 ```bash
 # Option 1 — nano (easy for beginners)
 sudo EDITOR=nano visudo
@@ -117,25 +120,30 @@ sudo EDITOR=nano visudo
 sudo EDITOR=vim visudo
 ```
 
-- Add this line at the bottom, replacing ``yourusername`` with your actual username:
+- Add this line at the bottom, replacing `yourusername` with your actual username:
+
 ```bash
 yourusername ALL=(ALL) NOPASSWD: /bin/systemctl
 ```
-(Replace ``/bin/systemctl`` with actual path if different)
 
-⚠️ Be careful: always use ``visudo`` to avoid syntax errors!
+(Replace `/bin/systemctl` with actual path if different)
+
+⚠️ Be careful: always use `visudo` to avoid syntax errors!
 
 6. **Run the bot as a systemd service**
 
 This allows the bot to start automatically with your system and run in the background.
 
 - Create a systemd service file:
+
 ```bash
 # Replace "yourusername" with your actual Linux username
 sudo nano /etc/systemd/system/server-manager-bot.service
 # Or use vim: sudo nano /etc/systemd/system/server-manager-bot.service
 ```
+
 Paste this content into the file:
+
 ```sh
 [Unit]
 Description=Server Manager Bot
@@ -151,12 +159,14 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 ```
+
 ❗ **IMPORTANT:**
-Make sure to replace ``yourusername`` and the paths (``WorkingDirectory``, ``ExecStart``)
-with the correct ones for your system. Use ``pwd`` to check the full path to your project.
-Also make sure ``.venv/bin/python`` exists — or adjust to the correct Python path.
+Make sure to replace `yourusername` and the paths (`WorkingDirectory`, `ExecStart`)
+with the correct ones for your system. Use `pwd` to check the full path to your project.
+Also make sure `.venv/bin/python` exists — or adjust to the correct Python path.
 
 - Reload systemd and enable the service:
+
 ```bash
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
@@ -165,11 +175,13 @@ sudo systemctl start server-manager-bot
 ```
 
 - Check logs (optional):
+
 ```bash
 journalctl -u server-manager-bot -f
 ```
 
 - If you ever want to stop the bot:
+
 ```bash
 sudo systemctl stop server-manager-bot
 ```
@@ -229,7 +241,7 @@ Please keep the code clean and follow the project style.
 
 - [ ] Docker integration: list containers, start/stop/restart via buttons
 - [ ] Graphs: CPU/RAM/Disk/Swap usage over the last hours
-- [ ] Alerts & Notifications: send Telegram alerts on high load or service failure
+- [x] Alerts & Notifications: send Telegram alerts on high load or service failure
 - [ ] Port scanner: list listening TCP ports with process names
 - [ ] Cron-manager: add/remove cron jobs via bot commands
 - [ ] Log search: grep-like filtering of logs

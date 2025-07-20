@@ -12,6 +12,7 @@ from db.services_methods import (
     get_all_services,
     add_service,
     get_service,
+    update_service_status,
 )
 from bot import text
 from utils.services import get_service_info, run_systemctl_command
@@ -68,6 +69,7 @@ async def start_service_handler(callback: types.CallbackQuery):
         return
 
     success = run_systemctl_command("start", service_name)
+    info = get_service_info(service_name)  # update info
     if not success:
         await callback.message.answer(
             f"❌ Failed to start service <code>{service_name}</code>."
@@ -92,6 +94,7 @@ async def restart_service_handler(callback: types.CallbackQuery):
         return
 
     success = run_systemctl_command("restart", service_name)
+    info = get_service_info(service_name)  # update info
     if not success:
         await callback.message.answer(
             f"❌ Failed to restart service <code>{service_name}</code>."
@@ -116,6 +119,8 @@ async def stop_service_handler(callback: types.CallbackQuery):
         return
 
     success = run_systemctl_command("stop", service_name)
+    info = get_service_info(service_name)  # update info
+    await update_service_status(service_name, False)
     if not success:
         await callback.message.answer(
             f"❌ Failed to stop service <code>{service_name}</code>."
