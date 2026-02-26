@@ -26,37 +26,25 @@ async def refresh_server_status_handler(callback: types.CallbackQuery):
 
 
 def generate_server_status_message() -> str:
-    cpu = system.get_cpu()
-    temp = system.get_cpu_temperature()
-    ram = system.get_ram()
-    swap = system.get_swap_usage()
-    disk = system.get_disk()
-    top_cpu = system.get_top_process("cpu")
-    top_ram = system.get_top_process("ram")
     network = system.get_network_traffic()
-
-    cpu_bar = system.make_bar(cpu)
-    ram_bar = system.make_bar(ram)
-    swap_bar = system.make_bar(swap)
-    disk_bar = system.make_bar(disk)
 
     return text.SERVER_STATUS.format(
         os=system.get_distro(),
         kernel=system.get_kernel(),
-        hostname=system.get_hostname(),
-        cpu=cpu,
-        temp=temp,
-        ram=ram,
-        swap=swap,
-        disk=disk,
-        top_cpu=top_cpu,
-        top_ram=top_ram,
-        cpu_bar=cpu_bar,
-        ram_bar=ram_bar,
-        swap_bar=swap_bar,
-        disk_bar=disk_bar,
-        local_ip=system.get_local_ip(),
-        ip=system.get_ip(),
+        hostname=f"<tg-spoiler>{system.get_hostname()}</tg-spoiler>",
+        cpu=system.get_cpu(),
+        temp=system.get_cpu_temperature(),
+        ram=system.get_ram(),
+        swap=system.get_swap_usage(),
+        disk=system.get_disk(),
+        top_cpu=system.get_top_process("cpu"),
+        top_ram=system.get_top_process("ram"),
+        cpu_bar=system.make_bar(system.get_cpu()),
+        ram_bar=system.make_bar(system.get_ram()),
+        swap_bar=system.make_bar(system.get_swap_usage()),
+        disk_bar=system.make_bar(system.get_disk()),
+        local_ip=f"<tg-spoiler>{system.get_local_ip()}</tg-spoiler>",
+        ip=f"<tg-spoiler>{system.get_ip()}</tg-spoiler>",
         download=network["download"],
         upload=network["upload"],
         packets_in=network["packets_in"],
