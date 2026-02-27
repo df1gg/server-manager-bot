@@ -9,6 +9,20 @@ from config import ALERT_THRESHOLDS, OWNER_IDS, SYSTEM_MONITORING_INTERVAL
 from utils.format import format_bytes
 
 
+def to_float(value, default=0.0) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
+
+    if isinstance(value, str):
+        normalized = value.strip().replace("°C", "")
+        try:
+            return float(normalized)
+        except ValueError:
+            return float(default)
+
+    return float(default)
+
+
 def get_distro():
     if platform.system() == "Linux":
         try:
@@ -138,6 +152,7 @@ def get_network_traffic():
 
 def make_bar(percent: float, size: int = 8) -> str:
     """Returns a visual progress bar string, like [██████░░░░░░]"""
+    percent = to_float(percent, 0)
     filled_length = int(size * percent / 100)
     bar = "█" * filled_length + "░" * (size - filled_length)
     return f"[{bar}]"
@@ -157,8 +172,8 @@ async def monitoring_load(bot: Bot):
             "cpu": get_cpu(),
             "ram": get_ram(),
             "disk": get_disk(),
-            "swap": get_swap_usage(),
-            "cpu_temp": float(get_cpu_temperature().replace("°C", "") or 0),
+            "swap": to_float(get_swap_usage(), 0),
+            "cpu_temp": to_float(get_cpu_temperature(), 0),
         }
 
         for key, value in metrics.items():
