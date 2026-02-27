@@ -3,6 +3,7 @@ import platform
 from aiogram import Bot
 import psutil
 import socket
+import urllib.request
 from datetime import datetime
 from config import ALERT_THRESHOLDS, OWNER_IDS, SYSTEM_MONITORING_INTERVAL
 from utils.format import format_bytes
@@ -47,7 +48,14 @@ def get_disk():
 
 
 def get_ip():
-    return socket.gethostbyname(socket.gethostname())
+    try:
+        return (
+            urllib.request.urlopen("https://api.ipify.org", timeout=3)
+            .read()
+            .decode("utf8")
+        )
+    except Exception:
+        return "-"
 
 
 def get_local_ip():
@@ -58,7 +66,10 @@ def get_local_ip():
         s.close()
         return ip
     except Exception:
-        return "127.0.0.1"
+        try:
+            return socket.gethostbyname(socket.gethostname())
+        except Exception:
+            return "127.0.0.1"
 
 
 def get_uptime():
