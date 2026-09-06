@@ -75,7 +75,7 @@ Ideal for hobbyists, sysadmins, and minimal Linux lovers who don’t want to dea
 1. **Clone the repo**
 
 ```bash
-git clone https://github.com/df1gg/server-manager-bot.git && cd server-manager-bot
+git clone https://github.com/by-cortex/server-manager-bot.git && cd server-manager-bot
 ```
 
 2. **Create and activate virtualenv**
